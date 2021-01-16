@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "476479001885",
+    "firebase_url": "https://telyport-4cb6e-default-rtdb.firebaseio.com",
+    "project_id": "telyport-4cb6e",
+    "storage_bucket": "telyport-4cb6e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:476479001885:android:be675416a6be24b918fdf4",
+        "android_client_info": {
+          "package_name": "com.example.telyport"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "476479001885-1j1tf2eufkjnin8ifrnmvbhgjq6lrufd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAepoNB4fy9K0ha1wQ0qDfKGQ_T_QctUxo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "476479001885-1j1tf2eufkjnin8ifrnmvbhgjq6lrufd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
