@@ -80,22 +80,28 @@ class MainActivity2 : AppCompatActivity(),EasyPermissions.PermissionListener, Lo
             binding.progressbar.visibility = View.VISIBLE
 
             db.collection("location_table")
+                    .document(android_id)
+                    .collection("device_location_detail")
                 .orderBy("lastUpdatedAt", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener { documents ->
-                        binding.tvNumDataUpload.text ="No. of entries " +  (documents.size()-1)
+
+                    if (documents.documents.isNotEmpty()){
+                        binding.tvNumDataUpload.text ="No. of entries " +  (documents.size())
 
                         val inputFormat = SimpleDateFormat(
-                            "yyyy-MM-dd'T'hh:mm:ss'Z'",
-                            Locale.getDefault()
+                                "yyyy-MM-dd'T'hh:mm:ss'Z'",
+                                Locale.getDefault()
                         )
                         val outputFormat = SimpleDateFormat("hh:mm:ss a", Locale.getDefault())
 
-                    if (documents.documents.get(0).get("lastUpdatedAt").toString() != ""){
-                        val  outputDate : Date = inputFormat.parse(documents.documents.get(0).get(
-                                "lastUpdatedAt").toString())!!
-                        val date = outputFormat.format(outputDate)
-                        binding.tvLastUpdate.text = "Database Updated at : " + date
+                        if (documents.documents.get(0).get("lastUpdatedAt").toString() != ""){
+                            val  outputDate : Date = inputFormat.parse(documents.documents.get(0).get(
+                                    "lastUpdatedAt").toString())!!
+                            val date = outputFormat.format(outputDate)
+                            binding.tvLastUpdate.text = "Database Updated at : " + date
+                        }
+
                     }
 
                     binding.progressbar.visibility = View.GONE
@@ -240,29 +246,24 @@ class MainActivity2 : AppCompatActivity(),EasyPermissions.PermissionListener, Lo
     override fun locationFound(lat: String, log: String) {
         val time = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'", Locale.getDefault()).format(System.currentTimeMillis())
         val location = Location(longitude, latitude, time)
-       // writeNewUser(android_id,location)
-        addInfo(location)
+        addInfo(android_id,location)
 
         Log.d(TAG, "Lat ${lat} or long ${log}")
     }
 
-    private fun writeNewUser(androidId: String, location: Location) {
-        checkUserAlreadyExist(androidId,location)
-    }
 
-    private fun checkUserAlreadyExist(androidId: String, location: Location) {
+    private fun addInfo(androidId: String, location: Location) {
         binding.progressbar.visibility = View.VISIBLE
         if (Utility.isNetworkAvailable()) {
             db.collection("location_table").get().addOnSuccessListener {
                     result ->
-                /*for (document in result) {
-                    if(document.data.get("device_id")!! == androidId){
 
-                    }
-                }*/
                 binding.progressbar.visibility = View.VISIBLE
 
-                db.collection("location_table").document(androidId).set(location).addOnSuccessListener {
+                db.collection("location_table")
+                        .document(androidId)
+                        .collection("device_location_detail")
+                        .add(location).addOnSuccessListener {
                     Log.d(TAG, "DocumentSnapshot successfully written!")
                     binding.progressbar.visibility = View.GONE
                     getInfo()
@@ -280,22 +281,6 @@ class MainActivity2 : AppCompatActivity(),EasyPermissions.PermissionListener, Lo
         }
     }
 
-    private fun addInfo(location: Location) {
-        if (Utility.isNetworkAvailable()) {
-            binding.progressbar.visibility = View.VISIBLE
-            db.collection("location_table").add(location).addOnSuccessListener {
-                Log.d(TAG, "DocumentSnapshot successfully written!")
-
-                binding.progressbar.visibility = View.GONE
-                getInfo()
-            }.addOnFailureListener {
-                binding.progressbar.visibility = View.GONE
-                Toast.makeText(this, "something_went_wrong", Toast.LENGTH_LONG).show()
-            }
-        } else {
-            Toast.makeText(this, "no_internet_connection", Toast.LENGTH_SHORT).show()
-        }
-    }
     override fun locationNotFound(string: String) {
         Toast.makeText(this, "Location Not Found", Toast.LENGTH_LONG).show()
     }
